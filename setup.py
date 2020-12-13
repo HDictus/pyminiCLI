@@ -5,14 +5,14 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name='pyminiCLI',
-    version='0.1.2',
+    version='0.1.3',
     packages=['minicli'],
-    url='',
     license='MIT',
     author='HDIctus',
     tests_require=['pytest'],
     author_email='h.t.dictus@gmail.com',
     description='quick and easy command-line interfaces',
     long_description=README,
-    long_description_content_type="text/markdown"
+    long_description_content_type="text/markdown",
+    url="https://github.com/HDictus/pyminiCLI"
 )
