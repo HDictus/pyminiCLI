@@ -12,7 +12,7 @@ command-line options, and its docstring used to supplement the usage in
 --help
 
 .. code:: python
-    from clipy import command
+    from minicli import command
 
 
     def a_function(positional1, positional2, kwarg='blarg'):
@@ -63,6 +63,7 @@ To do
 
  - boolean options
  - one-letter flags
+ - multiple named commands in the same python app
  - include type hints in --help
  - cast arguments to type hint types
  - *args
