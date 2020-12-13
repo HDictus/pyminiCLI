@@ -1,5 +1,5 @@
 import pytest
-from clipy import command
+from minicli import command
 
 
 def test_no_args(capfd):
