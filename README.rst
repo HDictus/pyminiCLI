@@ -11,7 +11,7 @@ arguments will be interpereted as command-line positionals, its keywords as
 command-line options, and its docstring used to supplement the usage in
 --help
 
-.. code:: python
+```
     from minicli import command
 
 
@@ -29,8 +29,9 @@ command-line options, and its docstring used to supplement the usage in
         return
 
     command(a_function)
-
-.. code: bash
+```
+results
+```
 
    $ python3 example.py an_argument another_argument --kwarg optional_argument
    ['positional1', 'positional2']
@@ -47,7 +48,7 @@ command-line options, and its docstring used to supplement the usage in
    :param positional2:
    :param kwarg:
    :return:
-
+```
 
 
 Contributing
