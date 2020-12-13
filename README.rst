@@ -63,6 +63,7 @@ To do
 
  - boolean options
  - one-letter flags
+ - multiple named commands in the same python app
  - include type hints in --help
  - cast arguments to type hint types
  - *args

@@ -10,10 +10,10 @@ def test_no_args(capfd):
         check['ok'] = True
         return
 
-    command(no_args, args=[])
+    command(no_args, argv=[])
     assert check['ok']
     with pytest.raises(SystemExit) as se:
-        command(no_args, args=['an arg'])
+        command(no_args, argv=['an arg'])
 
 
 def test_positionals_and_kwargs(capfd):
@@ -25,9 +25,9 @@ def test_positionals_and_kwargs(capfd):
         return
 
     with pytest.raises(SystemExit) as se:
-        command(with_args, args=[])
+        command(with_args, argv=[])
 
-    command(with_args, args=['avalue', 'another'])
+    command(with_args, argv=['avalue', 'another'])
     assert check['called'] == ('avalue', 'another', 'yes', 'no')
-    command(with_args, args=['avalue', 'another', '--kwarg1', 'indeed'])
+    command(with_args, argv=['avalue', 'another', '--kwarg1', 'indeed'])
     assert check['called'] == ('avalue', 'another', 'indeed', 'no')
