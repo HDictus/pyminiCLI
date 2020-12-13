@@ -1,9 +1,9 @@
 from setuptools import setup
 
 setup(
-    name='CLIpy',
+    name='pyminiCLI',
     version='0.0.1',
-    packages=['clipy', 'tests'],
+    packages=['minicli'],
     url='',
     license='MIT',
     author='HDIctus',
