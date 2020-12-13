@@ -1,4 +1,4 @@
-CLIpy
+pyminiCLI
 =====
 
 the quickest and simplest way to run python as a command line app
@@ -6,12 +6,13 @@ the quickest and simplest way to run python as a command line app
 how it works
 ------------
 
-simply call clipy.command on a function in your script, and its positional
+simply call minicli.command on a function in your script, and its positional
 arguments will be interpereted as command-line positionals, its keywords as
 command-line options, and its docstring used to supplement the usage in
 --help
 
-```
+in example.py:
+.. code-block:: python
     from minicli import command
 
 
@@ -29,10 +30,10 @@ command-line options, and its docstring used to supplement the usage in
         return
 
     command(a_function)
-```
-results
-```
 
+the result:
+
+.. code-block:: bash
    $ python3 example.py an_argument another_argument --kwarg optional_argument
    ['positional1', 'positional2']
    ['kwarg']
@@ -48,12 +49,12 @@ results
    :param positional2:
    :param kwarg:
    :return:
-```
+
 
 
 Contributing
 ------------
-If you would like to add to clipy:
+If you would like to add to pyminiCLI:
  1. make an issue explaining what improvment you would like to make
  2. create a pull request
 
