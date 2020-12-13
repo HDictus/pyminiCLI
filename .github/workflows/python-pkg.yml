@@ -27,8 +27,8 @@ jobs:
         pip install .
     - name: Lint with pylint and pycodestyle
       run: |
-        pylint vision_analyses
-        pycodestyle vision_analyses
+        pylint minicli
+        pycodestyle minicli
     - name: Test with pytest
       run: |
         python -m pytest
