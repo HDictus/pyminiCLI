@@ -12,7 +12,7 @@ command-line options, and its docstring used to supplement the usage in
 --help
 
 in example.py:
-.. code-block:: python
+```
     from minicli import command
 
 
@@ -30,10 +30,10 @@ in example.py:
         return
 
     command(a_function)
-
+```
 the result:
 
-.. code-block:: bash
+```
    $ python3 example.py an_argument another_argument --kwarg optional_argument
    ['positional1', 'positional2']
    ['kwarg']
@@ -49,7 +49,7 @@ the result:
    :param positional2:
    :param kwarg:
    :return:
-
+```
 
 
 Contributing
