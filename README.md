@@ -35,8 +35,6 @@ the result:
 
 ```
    $ python3 example.py an_argument another_argument --kwarg optional_argument
-   ['positional1', 'positional2']
-   ['kwarg']
    Hello!
    my positionals are:  an_argument another_argument
    my options are:  optional_argument
