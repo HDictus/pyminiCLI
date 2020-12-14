@@ -1,7 +1,7 @@
 pyminiCLI
 =====
 
-the quickest and simplest way to run python as a command line app
+the quickest and simplest way to specify command-line interfaces for python scripts and apps.
 
 how it works
 ------------
