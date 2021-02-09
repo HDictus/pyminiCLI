@@ -11,13 +11,11 @@ class ArgumentParser(argparse.ArgumentParser):
         super().__init__(*args, **kwargs)
         self.help_string = "usage: "
 
-    # pylint: disable=signature-differs
-    def print_usage(self, file):
-        self._print_message(self.help_string)
+    def print_usage(self, file=None):
+        self._print_message(self.help_string, file)
 
-    # pylint: disable=signature-differs
-    def print_help(self, file):
-        self._print_message(self.help_string)
+    def print_help(self, file=None):
+        self._print_message(self.help_string, file)
 
 
 def _add_arguments(parser, parameters):
