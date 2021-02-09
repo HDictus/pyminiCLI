@@ -31,12 +31,3 @@ def test_positionals_and_kwargs(capfd):
     assert check['called'] == ('avalue', 'another', 'yes', 'no')
     command(with_args, argv=['avalue', 'another', '--kwarg1', 'indeed'])
     assert check['called'] == ('avalue', 'another', 'indeed', 'no')
-
-
-def test_help(capfd):
-
-    def test_fun():
-        """just some help"""
-        return
-    with pytest.raises(SystemExit):
-        command(test_fun, argv=["--help"])
