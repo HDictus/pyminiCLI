@@ -40,3 +40,15 @@ def test_help(capfd):
         return
     with pytest.raises(SystemExit):
         command(test_fun, argv=["--help"])
+
+def test_var_args():
+    called_with = []
+
+    def test_fun(*args):
+        for a in args:
+            called_with.append(a)
+        return
+
+    command(test_fun, argv=['a', 'bunch', 'of', 'args'])
+    assert called_with == ['a', 'bunch', 'of', 'args']
+
