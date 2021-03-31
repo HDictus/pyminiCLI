@@ -66,5 +66,7 @@ To do
  - multiple named commands in the same python app
  - include type hints in --help
  - cast arguments to type hint types
+ - automatically include defaults in doc
+ - still work if options provided before positionals
  - *args
  - **kwargs

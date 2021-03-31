@@ -28,6 +28,7 @@ def _add_arguments(parser, parameters):
     :return: positionals (list<str>), keywords (list<str>)
     """
     positionals = []
+    vararg = []
     keywords = []
     for name, param in parameters.items():
         if param.default != Parameter.empty:
@@ -35,11 +36,20 @@ def _add_arguments(parser, parameters):
             parser.add_argument(option_string, default=param.default)
             parser.help_string += f" [{option_string} <value>] "
             keywords.append(name)
+        elif param.kind == Parameter.KEYWORD_ONLY:
+            option_string = '--' + name
+            parser.add_argument(option_string, required=True)
+            parser.help_string += f" [{option_string} <value> (required)] "
+            keywords.append(name)
+        elif param.kind == Parameter.VAR_POSITIONAL:
+            parser.add_argument(name, nargs='*')
+            parser.help_string += f"<{name}... >"
+            vararg.append(name)
         else:
             parser.add_argument(name)
             parser.help_string += f" {name} "
             positionals.append(name)
-    return positionals, keywords
+    return positionals, vararg, keywords
 
 
 def command(function, argv=None):
@@ -59,7 +69,7 @@ def command(function, argv=None):
 
     arguments = signature(function).parameters
     parser = ArgumentParser()
-    positionals, keywords = _add_arguments(
+    positionals, vararg, keywords = _add_arguments(
         parser, arguments
     )
 
@@ -68,6 +78,8 @@ def command(function, argv=None):
     parser.help_string += '\n'
 
     results = parser.parse_args(argv)
-    args = (getattr(results, positional) for positional in positionals)
+    args = list(getattr(results, positional) for positional in positionals)
+    if vararg:
+        args += list(getattr(results, vararg[0]))
     kwargs = {key: getattr(results, key) for key in keywords}
     return function(*args, **kwargs)
