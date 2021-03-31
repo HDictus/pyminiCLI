@@ -36,9 +36,14 @@ def _add_arguments(parser, parameters):
             parser.add_argument(option_string, default=param.default)
             parser.help_string += f" [{option_string} <value>] "
             keywords.append(name)
+        elif param.kind == Parameter.KEYWORD_ONLY:
+            option_string = '--' + name
+            parser.add_argument(option_string, required=True)
+            parser.help_string += f" [{option_string} <value> (required)] "
+            keywords.append(name)
         elif param.kind == Parameter.VAR_POSITIONAL:
             parser.add_argument(name, nargs='*')
-            parser.help_string += f"{name}"
+            parser.help_string += f"<{name}... >"
             vararg.append(name)
         else:
             parser.add_argument(name)
