@@ -40,3 +40,34 @@ def test_help(capfd):
         return
     with pytest.raises(SystemExit):
         command(test_fun, argv=["--help"])
+
+def test_var_args():
+    called_with = []
+
+    def test_fun(*args):
+        for a in args:
+            called_with.append(a)
+        return
+
+    command(test_fun, argv=['a', 'bunch', 'of', 'args'])
+    assert called_with == ['a', 'bunch', 'of', 'args']
+
+
+def test_var_args_not_at_end():
+    a_val = []
+    b_val = []
+    args_val = []
+
+    def test_fun(a, *args, b):
+        a_val.append(a)
+        b_val.append(b)
+        for arg in args:
+            args_val.append(arg)
+        return
+
+    command(test_fun, argv=['A', 'args', 'more-args', '--b', 'B'])
+    assert a_val == ['A']
+    assert b_val == ['B']
+    assert args_val == ['args', 'more-args']
+    with pytest.raises(SystemExit):
+        command(test_fun, argv=['A', 'args', 'more-args', 'B'])
