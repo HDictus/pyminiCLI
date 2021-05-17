@@ -13,40 +13,51 @@ command-line options, and its docstring used to supplement the usage in
 
 in example.py:
 ```
-    from minicli import command
+from minicli import command
 
 
-    def a_function(positional1, positional2, kwarg='blarg'):
-        """
-        a docstring
-        :param positional1:
-        :param positional2:
-        :param kwarg:
-        :return:
-        """
-        print("Hello!")
-        print('my positionals are: ', positional1, positional2)
-        print('my options are: ', kwarg)
-        return
+def a_function(positional1, *args, keyword_only, kwarg='blarg'):
+    """
+    a docstring
+    :param positional1: the first positional argument
+    :param: *args: any number of other arguments
+    :param keyword_only: non-optional -- argument
+    :param kwarg: an option
+    """
+    print("Hello!")
+    print('I recieved positional: ', positional1)
+    print('required keyword:, ' keyword_only)
+    print('other positionals: ', *args)
+    print('my options are: ', kwarg)
+    return
 
-    command(a_function)
+
+command(a_function)
+# should have usage, followed by docstring as help
+# all positionals should be passed in order
+# all options as keywords
+
 ```
 the result:
 
 ```
-   $ python3 example.py an_argument another_argument --kwarg optional_argument
-   Hello!
-   my positionals are:  an_argument another_argument
-   my options are:  optional_argument
-   
-   $ python3 example.py --help
-   usage:  positional1  positional2  [--kwarg <value>] 
+$ python example.py a b c d e --keyword_only b --kwarg z
+Hello!
+I recieved positional:  a
+required keyword:  b
+other positionals:  b c d e
+my options are:  z
 
-   a docstring
-   :param positional1:
-   :param positional2:
-   :param kwarg:
-   :return:
+
+$ python example.py --help
+usage:  positional1 <args... > [--keyword_only <value> (required)]  [--kwarg <value>] 
+
+    a docstring
+    :param positional1: the first positional argument
+    :param: *args: any number of other arguments
+    :param keyword_only: non-optional -- argument
+    :param kwarg: an option
+
 ```
 
 
@@ -66,5 +77,6 @@ To do
  - multiple named commands in the same python app
  - include type hints in --help
  - cast arguments to type hint types
- - *args
+ - automatically include defaults in doc
+ - still work if options provided before positionals
  - **kwargs
