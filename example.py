@@ -1,6 +1,6 @@
 from minicli import command
 
-def a_function(positional1: int, *args: str, keyword_only: float, kwarg='blarg'):
+def a_function(positional1, a_float: float, *args, keyword_only, kwarg='blarg'):
     """
     a docstring
     :param positional1 (integer): the first positional argument
@@ -10,6 +10,7 @@ def a_function(positional1: int, *args: str, keyword_only: float, kwarg='blarg')
     """
     print("Hello!")
     print('I recieved positional: ', positional1)
+    print("I converted this for you:", a_float, type(a_float))
     print('required keyword: ', keyword_only)
     print('other positionals: ', *args)
     print('my options are: ', kwarg)

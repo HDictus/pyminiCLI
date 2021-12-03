@@ -16,7 +16,7 @@ in example.py:
 from minicli import command
 
 
-def a_function(positional1, *args, keyword_only, kwarg='blarg'):
+def a_function(positional1, a_float:float,  *args, keyword_only, kwarg='blarg'):
     """
     a docstring
     :param positional1: the first positional argument
@@ -41,21 +41,20 @@ command(a_function)
 the result:
 
 ```
-$ python example.py a b c d e --keyword_only b --kwarg z
+$ python example.py a 1.43 b c d e --keyword_only b --kwarg z
 Hello!
 I recieved positional:  a
+I converted this for you: 1.43 <class 'float'>
 required keyword:  b
 other positionals:  b c d e
 my options are:  z
-
-
 $ python example.py --help
-usage:  positional1 <args... > [--keyword_only <value> (required)]  [--kwarg <value>] 
+usage:  positional1  a_float <args... > [--keyword_only <value> (required)]  [--kwarg <value>] 
 
     a docstring
-    :param positional1: the first positional argument
+    :param positional1 (integer): the first positional argument
     :param: *args: any number of other arguments
-    :param keyword_only: non-optional -- argument
+    :param keyword_only: non-optional -- argument (a number)
     :param kwarg: an option
 
 ```
@@ -77,7 +76,6 @@ To do
  - one-letter flags
  - multiple named commands in the same python app
  - include type hints in --help
- - cast arguments to type hint types
  - automatically include defaults in doc
  - still work if options provided before positionals
- - **kwargs
+
