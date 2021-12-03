@@ -1,6 +1,5 @@
 import pytest
-from minicli import command, IncorrectInputFormat
-
+from minicli import command
 
 def test_no_args(capfd):
     check = dict(ok=False)
