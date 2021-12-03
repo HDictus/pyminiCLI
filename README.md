@@ -73,6 +73,7 @@ To do
 -----
 
  - boolean options
+ - error incorrectly lists varargs as required
  - one-letter flags
  - multiple named commands in the same python app
  - include type hints in --help

@@ -71,3 +71,21 @@ def test_var_args_not_at_end():
     assert args_val == ['args', 'more-args']
     with pytest.raises(SystemExit):
         command(test_fun, argv=['A', 'args', 'more-args', 'B'])
+
+
+def test_type_hints_convert_to_type():
+    intval = []
+    floatval = []
+    varval = []
+
+    def test_fun(anint: int, *varint: int, kwfloat: float=6.):
+        intval.append(anint)
+        floatval.append(kwfloat)
+        for v in varint:
+            varval.append(v)
+
+    command(test_fun, argv=['10', '14', '15', '--kwfloat', '9'])
+    assert intval == [10]
+    assert floatval == [9]
+    assert varval == [14, 15]
+    return

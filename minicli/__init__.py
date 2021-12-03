@@ -30,6 +30,7 @@ def _add_arguments(parser, parameters):
     positionals = []
     vararg = []
     keywords = []
+    types = {}
     for name, param in parameters.items():
         if param.default != Parameter.empty:
             option_string = '--' + name
@@ -49,7 +50,20 @@ def _add_arguments(parser, parameters):
             parser.add_argument(name)
             parser.help_string += f" {name} "
             positionals.append(name)
-    return positionals, vararg, keywords
+        if param.annotation != param.empty:
+            types[name] = param.annotation
+        else:
+            types[name] = str
+
+    return positionals, vararg, keywords, types
+
+
+def _get_argument(parsed_args, name, types, vararg=False):
+    """Find the value of name in the parsed arguments
+    casting to the annotated type if appropriate"""
+    if vararg:
+        return (types[name](value) for value in getattr(parsed_args, name))
+    return types[name](getattr(parsed_args, name))
 
 
 def command(function, argv=None):
@@ -69,7 +83,7 @@ def command(function, argv=None):
 
     arguments = signature(function).parameters
     parser = ArgumentParser()
-    positionals, vararg, keywords = _add_arguments(
+    positionals, vararg, keywords, types = _add_arguments(
         parser, arguments
     )
 
@@ -78,8 +92,10 @@ def command(function, argv=None):
     parser.help_string += '\n'
 
     results = parser.parse_args(argv)
-    args = list(getattr(results, positional) for positional in positionals)
+    args = list(
+        _get_argument(results, positional, types) for positional in positionals)
     if vararg:
-        args += list(getattr(results, vararg[0]))
-    kwargs = {key: getattr(results, key) for key in keywords}
+        args += list(_get_argument(results, vararg[0], types, vararg=True))
+    kwargs = {key: _get_argument(results, key, types)for key in keywords}
+
     return function(*args, **kwargs)
