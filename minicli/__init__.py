@@ -3,6 +3,7 @@ import sys
 import argparse
 from inspect import signature, Parameter
 
+
 class ArgumentParser(argparse.ArgumentParser):
     """ArgumentParser, but with custom --help"""
 
@@ -73,7 +74,8 @@ def _get_argument(parsed_args, name, types, vararg=False):
             sys.stderr.write('\n')
             sys.exit(1)
     if vararg:
-        return (_convert_type(types[name], value) for value in getattr(parsed_args, name))
+        return (_convert_type(types[name], value)
+                for value in getattr(parsed_args, name))
     return _convert_type(types[name], (getattr(parsed_args, name)))
 
 
@@ -104,7 +106,8 @@ def command(function, argv=None):
 
     results = parser.parse_args(argv)
     args = list(
-        _get_argument(results, positional, types) for positional in positionals)
+        _get_argument(results, positional, types)
+        for positional in positionals)
     if vararg:
         args += list(_get_argument(results, vararg[0], types, vararg=True))
     kwargs = {key: _get_argument(results, key, types)for key in keywords}
