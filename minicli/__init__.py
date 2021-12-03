@@ -4,6 +4,10 @@ import argparse
 from inspect import signature, Parameter
 
 
+class IncorrectInputFormat(TypeError):
+    pass
+
+
 class ArgumentParser(argparse.ArgumentParser):
     """ArgumentParser, but with custom --help"""
 
@@ -61,9 +65,19 @@ def _add_arguments(parser, parameters):
 def _get_argument(parsed_args, name, types, vararg=False):
     """Find the value of name in the parsed arguments
     casting to the annotated type if appropriate"""
+
+    def _convert_type(type, value):
+        try:
+            return type(value)
+        except ValueError as ve:
+            sys.stderr.write(str(ve))
+            sys.stderr.write('\n\n')
+            sys.stderr.write(f"{value} does not represent a valid value of {name} (could not cast to {type}), see above for error)")
+            sys.stderr.write('\n')
+            sys.exit(1)
     if vararg:
-        return (types[name](value) for value in getattr(parsed_args, name))
-    return types[name](getattr(parsed_args, name))
+        return (_convert_type(types[name], value) for value in getattr(parsed_args, name))
+    return _convert_type(types[name], (getattr(parsed_args, name)))
 
 
 def command(function, argv=None):

@@ -1,5 +1,5 @@
 import pytest
-from minicli import command
+from minicli import command, IncorrectInputFormat
 
 
 def test_no_args(capfd):
@@ -88,4 +88,20 @@ def test_type_hints_convert_to_type():
     assert intval == [10]
     assert floatval == [9]
     assert varval == [14, 15]
+    return
+
+
+def test_incorrect_string_for_argument():
+    intval = []
+    floatval = []
+    varval = []
+
+    def test_fun(anint: int, *varint: int, kwfloat: float = 6.):
+        intval.append(anint)
+        floatval.append(kwfloat)
+        for v in varint:
+            varval.append(v)
+    with pytest.raises(SystemExit) as exc_info:
+        command(test_fun, argv=['10.5'])
+        print(exc_info)
     return
