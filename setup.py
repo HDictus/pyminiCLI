@@ -5,7 +5,7 @@ with open('README.md', encoding='utf-8') as f:
 
 setup(
     name='pyminiCLI',
-    version='0.2.2',
+    version='0.3.0',
     packages=['minicli'],
     license='MIT',
     author='HDIctus',
