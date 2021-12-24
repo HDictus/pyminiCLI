@@ -2,11 +2,14 @@ from minicli import command
 
 def a_function(positional1, a_float: float, *args, keyword_only, kwarg='blarg'):
     """
-    a docstring
-    :param positional1 (integer): the first positional argument
-    :param: *args: any number of other arguments
-    :param keyword_only: non-optional -- argument (a number)
-    :param kwarg: an option
+    A description of the command
+
+    Arguments:
+      positional1 (integer): the first positional argument
+      a_float (float): e.g. 1.5
+      *args: any number of other arguments
+      keyword_only: non-optional -- argument (a number)
+      kwarg: an option
     """
     print("Hello!")
     print('I recieved positional: ', positional1)

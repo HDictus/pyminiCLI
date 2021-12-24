@@ -73,10 +73,24 @@ def _get_argument(parsed_args, name, types, vararg=False):
                 f" (could not cast to {typehint}), see above for error)")
             sys.stderr.write('\n')
             sys.exit(1)
+
     if vararg:
         return (_convert_type(types[name], value)
                 for value in getattr(parsed_args, name))
     return _convert_type(types[name], (getattr(parsed_args, name)))
+
+
+def _collect_positionals(results, positionals, types):
+    return list(_get_argument(results, positional, types)
+                for positional in positionals)
+
+
+def _collect_varargs(results, vararg, types):
+    return list(_get_argument(results, vararg[0], types, vararg=True))
+
+
+def _collect_kwargs(results, keywords, types):
+    return {key: _get_argument(results, key, types)for key in keywords}
 
 
 def command(function, argv=None):
@@ -105,11 +119,9 @@ def command(function, argv=None):
     parser.help_string += '\n'
 
     results = parser.parse_args(argv)
-    args = list(
-        _get_argument(results, positional, types)
-        for positional in positionals)
+    args = _collect_positionals(results, positionals, types)
     if vararg:
-        args += list(_get_argument(results, vararg[0], types, vararg=True))
-    kwargs = {key: _get_argument(results, key, types)for key in keywords}
+        args += _collect_varargs(results, vararg, types)
+    kwargs = _collect_kwargs(results, keywords, types)
 
     return function(*args, **kwargs)
