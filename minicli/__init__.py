@@ -30,6 +30,7 @@ def _add_arguments(parser, parameters):
     positionals = []
     vararg = []
     keywords = []
+    types = {}
     for name, param in parameters.items():
         if param.default != Parameter.empty:
             option_string = '--' + name
@@ -49,7 +50,47 @@ def _add_arguments(parser, parameters):
             parser.add_argument(name)
             parser.help_string += f" {name} "
             positionals.append(name)
-    return positionals, vararg, keywords
+        if param.annotation != param.empty:
+            types[name] = param.annotation
+        else:
+            types[name] = str
+
+    return positionals, vararg, keywords, types
+
+
+def _get_argument(parsed_args, name, types, vararg=False):
+    """Find the value of name in the parsed arguments
+    casting to the annotated type if appropriate"""
+
+    def _convert_type(typehint, value):
+        try:
+            return typehint(value)
+        except ValueError as error:
+            sys.stderr.write(str(error))
+            sys.stderr.write('\n\n')
+            sys.stderr.write(
+                f"{value} does not represent a valid value of {name}"
+                f" (could not cast to {typehint}), see above for error)")
+            sys.stderr.write('\n')
+            sys.exit(1)
+
+    if vararg:
+        return (_convert_type(types[name], value)
+                for value in getattr(parsed_args, name))
+    return _convert_type(types[name], (getattr(parsed_args, name)))
+
+
+def _collect_positionals(results, positionals, types):
+    return list(_get_argument(results, positional, types)
+                for positional in positionals)
+
+
+def _collect_varargs(results, vararg, types):
+    return list(_get_argument(results, vararg[0], types, vararg=True))
+
+
+def _collect_kwargs(results, keywords, types):
+    return {key: _get_argument(results, key, types)for key in keywords}
 
 
 def command(function, argv=None):
@@ -69,7 +110,7 @@ def command(function, argv=None):
 
     arguments = signature(function).parameters
     parser = ArgumentParser()
-    positionals, vararg, keywords = _add_arguments(
+    positionals, vararg, keywords, types = _add_arguments(
         parser, arguments
     )
 
@@ -78,8 +119,9 @@ def command(function, argv=None):
     parser.help_string += '\n'
 
     results = parser.parse_args(argv)
-    args = list(getattr(results, positional) for positional in positionals)
+    args = _collect_positionals(results, positionals, types)
     if vararg:
-        args += list(getattr(results, vararg[0]))
-    kwargs = {key: getattr(results, key) for key in keywords}
+        args += _collect_varargs(results, vararg, types)
+    kwargs = _collect_kwargs(results, keywords, types)
+
     return function(*args, **kwargs)

@@ -1,7 +1,6 @@
 import pytest
 from minicli import command
 
-
 def test_no_args(capfd):
     check = dict(ok=False)
 
@@ -71,3 +70,37 @@ def test_var_args_not_at_end():
     assert args_val == ['args', 'more-args']
     with pytest.raises(SystemExit):
         command(test_fun, argv=['A', 'args', 'more-args', 'B'])
+
+
+def test_type_hints_convert_to_type():
+    intval = []
+    floatval = []
+    varval = []
+
+    def test_fun(anint: int, *varint: int, kwfloat: float=6.):
+        intval.append(anint)
+        floatval.append(kwfloat)
+        for v in varint:
+            varval.append(v)
+
+    command(test_fun, argv=['10', '14', '15', '--kwfloat', '9'])
+    assert intval == [10]
+    assert floatval == [9]
+    assert varval == [14, 15]
+    return
+
+
+def test_incorrect_string_for_argument():
+    intval = []
+    floatval = []
+    varval = []
+
+    def test_fun(anint: int, *varint: int, kwfloat: float = 6.):
+        intval.append(anint)
+        floatval.append(kwfloat)
+        for v in varint:
+            varval.append(v)
+    with pytest.raises(SystemExit) as exc_info:
+        command(test_fun, argv=['10.5'])
+        print(exc_info)
+    return
