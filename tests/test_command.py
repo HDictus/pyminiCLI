@@ -104,3 +104,11 @@ def test_incorrect_string_for_argument():
         command(test_fun, argv=['10.5'])
         print(exc_info)
     return
+
+
+def test_function_with_None_default():
+
+    def test_fun(avar=None):
+        assert avar is None
+
+    command(test_fun)

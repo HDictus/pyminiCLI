@@ -53,7 +53,7 @@ def _add_arguments(parser, parameters):
         if param.annotation != param.empty:
             types[name] = param.annotation
         else:
-            types[name] = str
+            types[name] = None
 
     return positionals, vararg, keywords, types
 
@@ -64,6 +64,8 @@ def _get_argument(parsed_args, name, types, vararg=False):
 
     def _convert_type(typehint, value):
         try:
+            if typehint is None:
+                return value
             return typehint(value)
         except ValueError as error:
             sys.stderr.write(str(error))
